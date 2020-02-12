@@ -1,0 +1,30 @@
+{
+    "name": "diolcos/odoo-api-client",
+    "description": "A simple XML-RPC wrapper library for Odoo. For the time being, only a very limited set of Odoo API calls is exposed.",
+    "keywords": ["odoo", "xml", "rpc", "wrapper"],
+    "support": {
+        "issues": "https://github.com/diolcos/odoo-api-client/issues",
+        "source": "https://github.com/diolcos/odoo-api-client"
+    },
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Spyridon Kazanas",
+            "email": "s.kazanas@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "OdooApiClient\\": "src/"
+        },
+        "files": []
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "tbondois/odoo-ripcord": "^1.6",
+        "darkaonline/ripcord": "^0.1.7"
+    },
+    "require-dev": {
+    }
+}
