@@ -29,6 +29,21 @@ Class XmlRpcApiWrapper {
     }
 
     /**
+     * @param string $model : String e.g.: 'res.partner'.
+     * @param array $ids : Array of ids of the records to be read, e.g.: [1,2,3]
+     * @param array $fields : Field names to return, e.g.: ['name', 'country_id', 'comment']. Even if the id field is
+     * not requested, it is always returned.
+     * @return mixed
+     */
+    public function readRecord(string $model, array $ids, array $fields): array {
+        return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
+            'res.partner', 'read',
+            [$ids],
+            ['fields' => $fields]
+        );
+    }
+
+    /**
      * @param string $model : String eg: 'res.partner'.
      * @param array $data : [['name'=>'Name'], etc]
      * @return mixed
@@ -85,9 +100,9 @@ Class XmlRpcApiWrapper {
     /**
      * List record fields.
      * @param string $model
+     * @return array
      */
-    public function listRecordFields(string $model) {
-
+    public function listRecordFields(string $model): array {
         $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
             $model, 'fields_get',
             [], ['attributes' => ['string', 'help', 'type']]
@@ -97,17 +112,12 @@ Class XmlRpcApiWrapper {
     /**
      * List record ids.
      * @param string $model
-     * @param array $filter_data
+     * @param array $filter_data : [ [ ['is_company', '=', false], ] ]
      * @return array
      */
     public function listRecords(string $model, array $filter_data): array {
         return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
-            $model, 'search',
-            [
-                [
-                    ['is_company', '=', false],
-                ]
-            ]
+            $model, 'search', $filter_data
         );
     }
 }
