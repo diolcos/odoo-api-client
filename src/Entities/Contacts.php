@@ -26,7 +26,7 @@ class Contacts implements EntityInterface {
 
     /**
      * Create a new contact.
-     * @param string $data : Example: [ ['name' => $name] ]
+     * @param string $data : Example: [ ['name' => 'test name', 'phone' => '1234'] ]
      * @return mixed : The id of the created contact.
      */
     public function create(array $data=[]) {
@@ -36,7 +36,7 @@ class Contacts implements EntityInterface {
     /**
      * Update existing contact.
      * @param int $id
-     * @param array $data
+     * @param array $data : Example: ['name' => 'test name', 'phone' => '1234']
      * @return mixed
      */
     public function update(int $id, array $data=[]) {
