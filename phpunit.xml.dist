@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpunit>
+<!--
+    beStrictAboutOutputDuringTests - Any echoed message is considered a failure.
+ -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         verbose="true">
     <php>
         <var name="ODOO_API_URL" value="" />
         <var name="ODOO_API_DB" value="" />
         <var name="ODOO_API_USERNAME" value="" />
         <var name="ODOO_API_PASSWORD" value="" />
     </php>
+
+    <testsuite>
+        <directory suffix="Test.php">tests</directory>
+    </testsuite>
+
 </phpunit>

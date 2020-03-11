@@ -20,3 +20,5 @@ Thumbs.db
 
 # phpunit
 phpunit.xml
+
+examples/

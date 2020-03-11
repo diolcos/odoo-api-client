@@ -37,7 +37,7 @@ Class XmlRpcApiWrapper {
      */
     public function readRecord(string $model, array $ids, array $fields): array {
         return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
-            'res.partner', 'read',
+            $model, 'read',
             [$ids],
             ['fields' => $fields]
         );
@@ -91,10 +91,16 @@ Class XmlRpcApiWrapper {
      * @return bool
      */
     public function deleteRecord(string $model, int $id): bool {
-        return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
+        $result = $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
             $model, 'unlink',
             [[$id]]
         );
+
+        if ((is_array($result) && in_array('faultCode', $result)) || !$result) {
+            echo "\n(ERROR:" . $result['faultCode'] . ") - " . $result['faultString'];
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -103,7 +109,7 @@ Class XmlRpcApiWrapper {
      * @return array
      */
     public function listRecordFields(string $model): array {
-        $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
+        return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
             $model, 'fields_get',
             [], ['attributes' => ['string', 'help', 'type']]
         );
@@ -112,12 +118,12 @@ Class XmlRpcApiWrapper {
     /**
      * List record ids.
      * @param string $model
-     * @param array $filter_data : [ [ ['is_company', '=', false], ] ]
+     * @param array $filter_data :  [ ['is_company', '=', false], ]
      * @return array
      */
-    public function listRecords(string $model, array $filter_data): array {
+    public function listRecords(string $model, array $filter_data=[]): array {
         return $this->models->execute_kw($this->info['db'], $this->uid, $this->info['password'],
-            $model, 'search', $filter_data
+            $model, 'search', [ $filter_data ]
         );
     }
 }

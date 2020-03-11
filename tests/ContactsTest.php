@@ -2,14 +2,20 @@
 namespace OdooApiClient;
 
 use OdooApiClient\XmlRpcApiWrapper as OdooXmlRpcApiWrapper;
-use OdooApiClient\Entities\Contacts as OdooContacts;
+use OdooApiClient\Entities\Contacts;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Tests for {@see \OdooApiClient\Entities\Contacts}
+ *
+ * @covers \OdooApiClient\Entities\Contacts
+ * @covers \OdooApiClient\Entities\Partners
+ */
 class ContactsTest extends TestCase {
 
     private $odooApiWrapper;
-    private $odooContacts;
+    private $odooEntity;
     private $testdata;
 
     protected function setUp()
@@ -20,7 +26,7 @@ class ContactsTest extends TestCase {
             'username'  => $GLOBALS['ODOO_API_USERNAME'],
             'password'  => $GLOBALS['ODOO_API_PASSWORD'],
         ]);
-        $this->odooContacts = new OdooContacts($this->odooApiWrapper);
+        $this->odooEntity = new Contacts($this->odooApiWrapper);
 
         $this->testdata = [
             "name" => "Test Name",
@@ -37,18 +43,19 @@ class ContactsTest extends TestCase {
 
     public function testContact() {
         // Create new Contact and read it back.
-        $contact_id = $this->odooContacts->create([["name" => "name1"]]);
-        $contact_data = $this->odooContacts->read([$contact_id], ["name"]);
-        $this->assertEquals(count($contact_data), 1);
+        $contact_id = $this->odooEntity->create([["name" => "name1"]]);
+        $contact_data = $this->odooEntity->read([$contact_id], ["name"]);
+        $this->assertEquals(1, count($contact_data));
+
         $this->assertEquals($contact_data[0]["name"], "name1");
 
         // Test list.
-        $contact_list = $this->odooContacts->list( [ [ ['name', '=', "name1"], ] ]);
-        $this->assertEquals(count($contact_list), 1);
+        $contact_list = $this->odooEntity->list( [ [ ['name', '=', "name1"], ] ]);
+        $this->assertNotCount(0, $contact_list);
 
         // Delete it.
-        $contact_deleted = $this->odooContacts->delete($contact_id);
-        $this->assertEquals($contact_deleted, true);
+        $contact_deleted = $this->odooEntity->delete($contact_id);
+        $this->assertEquals(true, $contact_deleted);
     }
 
     public function testContactFields() {
@@ -56,15 +63,15 @@ class ContactsTest extends TestCase {
         $fields = array_keys($this->testdata);
 
         // Create new Contact and read it back.
-        $contact_id = $this->odooContacts->create(
+        $contact_id = $this->odooEntity->create(
             [
                $this->testdata
             ]
         );
 
-        $this->assertEquals(is_int($contact_id), true, var_dump($contact_id));
+        $this->assertEquals(true, is_int($contact_id));
 
-        $contact_data = $this->odooContacts->read([$contact_id], $fields);
+        $contact_data = $this->odooEntity->read([$contact_id], $fields);
 
         $this->assertEquals(count($contact_data), 1);
         foreach ($this->testdata as $k => $v) {
@@ -72,8 +79,8 @@ class ContactsTest extends TestCase {
         }
 
         // Delete it.
-        $contact_deleted = $this->odooContacts->delete($contact_id);
-        $this->assertEquals($contact_deleted, true);
+        $contact_deleted = $this->odooEntity->delete($contact_id);
+        $this->assertEquals(true, $contact_deleted);
     }
 
     public function testContactFieldsUpdate() {
@@ -81,27 +88,24 @@ class ContactsTest extends TestCase {
         $fields = array_keys($this->testdata);
 
         // Create new Contact and read it back.
-        echo "Creating contact with id...";
-        $contact_id = $this->odooContacts->create([
+        $contact_id = $this->odooEntity->create([
             [
                 "name" => $this->testdata["name"]
             ]
         ]);
 
-        $this->assertEquals(is_int($contact_id), true);
+        $this->assertEquals(true, is_int($contact_id));
 
-        echo "Updating contact with id: {$contact_id}\n";
-        $update_response = $this->odooContacts->update($contact_id, [
+        $update_response = $this->odooEntity->update($contact_id, [
             "website" => $this->testdata["website"],
             "email" => $this->testdata["email"],
             "phone" => $this->testdata["phone"],
 //            "display_name" => $this->testdata["display_name"],
 //            "title" => $this->testdata["title"],
         ]);
-        $this->assertEquals($update_response, true);
+        $this->assertEquals(true, $update_response);
 
-        echo "Reading contact with id: {$contact_id}\n";
-        $contact_data = $this->odooContacts->read([$contact_id], $fields);
+        $contact_data = $this->odooEntity->read([$contact_id], $fields);
         $this->assertEquals(count($contact_data), 1);
 
         foreach ($this->testdata as $k => $v) {
@@ -109,7 +113,7 @@ class ContactsTest extends TestCase {
         }
 
         // Delete it.
-        $contact_deleted = $this->odooContacts->delete($contact_id);
-        $this->assertEquals($contact_deleted, true);
+        $contact_deleted = $this->odooEntity->delete($contact_id);
+        $this->assertEquals(true, $contact_deleted);
     }
 }
